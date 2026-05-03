@@ -33,7 +33,7 @@ export default function TaskDetailModal({ task, onClose }) {
     { value: 'in-progress', label: 'In Progress', color: 'var(--sky)' },
     { value: 'done', label: 'Done', color: 'var(--lime)' },
   ];
-  const currentStatus = statusOptions.find(s => s.value === task.status) || statusOptions[0];
+  const _currentStatus = statusOptions.find(s => s.value === task.status) || statusOptions[0];
 
   const handleComment = (e) => {
     e.preventDefault();

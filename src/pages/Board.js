@@ -91,7 +91,7 @@ function TaskCard({ task, onClick, onDrop }) {
 }
 
 export default function Board() {
-  const { tasks, moveTask, addTask } = useTasks();
+  const { tasks, moveTask } = useTasks();
   const [showCreate, setShowCreate] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [dragOver, setDragOver] = useState(null);
