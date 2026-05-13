@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTasks } from '../context/TaskContext';
+import { useTeams } from '../context/TeamsContext';
 
-export default function TaskModal({ onClose, defaultStatus }) {
+export default function TaskModal({ onClose, defaultStatus, defaultTeamId }) {
   const { user, allUsers } = useAuth();
   const { addTask } = useTasks();
+  const { teams, assignTaskToTeam } = useTeams();
+
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [priority, setPriority] = useState('medium');
@@ -12,11 +15,12 @@ export default function TaskModal({ onClose, defaultStatus }) {
   const [assignedTo, setAssignedTo] = useState(user.id);
   const [dueDate, setDueDate] = useState('');
   const [tags, setTags] = useState('');
+  const [teamId, setTeamId] = useState(defaultTeamId || '');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!title.trim()) return;
-    addTask({
+    const newTask = addTask({
       title: title.trim(),
       description: desc.trim(),
       priority,
@@ -27,8 +31,13 @@ export default function TaskModal({ onClose, defaultStatus }) {
       status: defaultStatus || 'todo',
       tags: tags.split(',').map(t => t.trim()).filter(Boolean),
     });
+    if (teamId && newTask) {
+      assignTaskToTeam(teamId, newTask.id);
+    }
     onClose();
   };
+
+  const inputStyle = { padding: '10px 14px' };
 
   return (
     <div style={{
@@ -58,10 +67,23 @@ export default function TaskModal({ onClose, defaultStatus }) {
             <textarea value={desc} onChange={e => setDesc(e.target.value)} placeholder="Add more details…" style={{ resize: 'vertical', minHeight: 80 }} />
           </div>
 
+          {/* Team picker */}
+          <div>
+            <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--text-2)', marginBottom: 6 }}>
+              Assign to team <span style={{ color: 'var(--text-3)' }}>(optional)</span>
+            </label>
+            <select value={teamId} onChange={e => setTeamId(e.target.value)} style={{ padding: '10px 14px' }}>
+              <option value="">No team</option>
+              {teams.map(t => (
+                <option key={t.id} value={t.id}>{t.name}</option>
+              ))}
+            </select>
+          </div>
+
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <div>
               <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--text-2)', marginBottom: 6 }}>Priority</label>
-              <select value={priority} onChange={e => setPriority(e.target.value)} style={{ padding: '10px 14px' }}>
+              <select value={priority} onChange={e => setPriority(e.target.value)} style={inputStyle}>
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
                 <option value="high">High</option>
@@ -69,7 +91,7 @@ export default function TaskModal({ onClose, defaultStatus }) {
             </div>
             <div>
               <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--text-2)', marginBottom: 6 }}>Assign to</label>
-              <select value={assignedTo} onChange={e => setAssignedTo(e.target.value)} style={{ padding: '10px 14px' }}>
+              <select value={assignedTo} onChange={e => setAssignedTo(e.target.value)} style={inputStyle}>
                 {allUsers.map(u => (
                   <option key={u.id} value={u.id}>{u.name}{u.id === user.id ? ' (you)' : ''}</option>
                 ))}
@@ -100,7 +122,7 @@ export default function TaskModal({ onClose, defaultStatus }) {
             }}>Cancel</button>
             <button type="submit" style={{
               flex: 2, padding: '11px', borderRadius: 999,
-              background: 'var(--lime)', color: '#0a0a0f', fontWeight: 700, fontSize: 14,
+              background: 'var(--lime)', color: '#0a0a0f', fontWeight: 700, fontSize: 14, border: 'none',
             }}>Create task</button>
           </div>
         </form>

@@ -11,6 +11,7 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Board from './pages/Board';
 import Teams from './pages/Teams';
+import TeamBoard from './pages/TeamBoard';
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
               <Route path="/board" element={<ProtectedRoute><Board /></ProtectedRoute>} />
               <Route path="/team" element={<Navigate to="/teams" replace />} />
               <Route path="/teams" element={<ProtectedRoute><Teams /></ProtectedRoute>} />
+              <Route path="/teams/:teamId" element={<ProtectedRoute><TeamBoard /></ProtectedRoute>} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </TeamsProvider>

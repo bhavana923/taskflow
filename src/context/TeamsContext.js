@@ -11,6 +11,7 @@ const DEMO_TEAMS = [
     color: '#c8ff57',
     createdBy: 'u1',
     memberIds: ['u1', 'u2', 'u3'],
+    taskIds: ['t1', 't2'],
     createdAt: new Date(Date.now() - 86400000 * 7).toISOString(),
   },
   {
@@ -20,6 +21,7 @@ const DEMO_TEAMS = [
     color: '#9b7dff',
     createdBy: 'u1',
     memberIds: ['u1', 'u3'],
+    taskIds: ['t3'],
     createdAt: new Date(Date.now() - 86400000 * 3).toISOString(),
   },
 ];
@@ -28,7 +30,8 @@ export function TeamsProvider({ children }) {
   const [teams, setTeams] = useState(() => {
     try {
       const stored = JSON.parse(localStorage.getItem('tf_teams'));
-      return stored || DEMO_TEAMS;
+      if (stored) return stored.map(t => ({ taskIds: [], ...t }));
+      return DEMO_TEAMS;
     } catch {
       return DEMO_TEAMS;
     }
@@ -46,6 +49,7 @@ export function TeamsProvider({ children }) {
       color: color || '#c8ff57',
       createdBy,
       memberIds: [createdBy],
+      taskIds: [],
       createdAt: new Date().toISOString(),
     };
     setTeams(prev => [team, ...prev]);
@@ -76,6 +80,26 @@ export function TeamsProvider({ children }) {
     ));
   };
 
+  const assignTaskToTeam = (teamId, taskId) => {
+    // Remove from any existing team first, then add to new team
+    setTeams(prev => prev.map(t => {
+      if (t.id === teamId) return { ...t, taskIds: [...(t.taskIds || []).filter(id => id !== taskId), taskId] };
+      return { ...t, taskIds: (t.taskIds || []).filter(id => id !== taskId) };
+    }));
+  };
+
+  const removeTaskFromTeam = (teamId, taskId) => {
+    setTeams(prev => prev.map(t =>
+      t.id === teamId
+        ? { ...t, taskIds: (t.taskIds || []).filter(id => id !== taskId) }
+        : t
+    ));
+  };
+
+  const getTaskTeam = (taskId) => {
+    return teams.find(t => (t.taskIds || []).includes(taskId)) || null;
+  };
+
   const getTeamMembers = (teamId, allUsers) => {
     const team = teams.find(t => t.id === teamId);
     if (!team) return [];
@@ -83,7 +107,12 @@ export function TeamsProvider({ children }) {
   };
 
   return (
-    <TeamsContext.Provider value={{ teams, createTeam, deleteTeam, updateTeam, addMember, removeMember, getTeamMembers }}>
+    <TeamsContext.Provider value={{
+      teams, createTeam, deleteTeam, updateTeam,
+      addMember, removeMember,
+      assignTaskToTeam, removeTaskFromTeam, getTaskTeam,
+      getTeamMembers,
+    }}>
       {children}
     </TeamsContext.Provider>
   );
