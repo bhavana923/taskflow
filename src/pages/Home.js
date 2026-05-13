@@ -79,7 +79,7 @@ export default function Home() {
           <div style={{ marginBottom: 20 }}>
             <span className="badge badge-lime">
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--lime)', display: 'inline-block' }} />
-              Internship Project · Built with React
+              ✦ COLLABORATE · TRACK · DELIVER
             </span>
           </div>
 
@@ -128,7 +128,7 @@ export default function Home() {
           </div>
 
           <p style={{ marginTop: 16, fontSize: 12, color: 'var(--text-3)' }}>
-            Demo: aanya@taskflow.app / demo123
+          Try Demo
           </p>
         </div>
       </section>
@@ -160,7 +160,7 @@ export default function Home() {
             Everything your team needs
           </h2>
           <p style={{ color: 'var(--text-2)', marginTop: 12, maxWidth: 440, margin: '12px auto 0' }}>
-            Built with React, localStorage, and a lot of care. No backend required.
+          Built To Create
           </p>
         </div>
 
@@ -272,7 +272,7 @@ export default function Home() {
       {/* Footer */}
       <footer style={{ borderTop: '1px solid var(--border)', padding: '32px 0', textAlign: 'center' }}>
         <div style={{ fontSize: 13, color: 'var(--text-3)' }}>
-          TaskFlow · Built with React & localStorage · Open Source Internship Project
+          TaskFlow For The Best Teams
         </div>
       </footer>
     </div>
