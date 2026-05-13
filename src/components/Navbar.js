@@ -45,7 +45,7 @@ export default function Navbar() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <NavLink to="/dashboard" active={isActive('/dashboard')}>Dashboard</NavLink>
             <NavLink to="/board" active={isActive('/board')}>Board</NavLink>
-            <NavLink to="/team" active={isActive('/team')}>Team</NavLink>
+            <NavLink to="/teams" active={isActive('/teams')}>Teams</NavLink>
             <div style={{ width: 1, height: 20, background: 'var(--border)', margin: '0 6px' }} />
             <div style={{ position: 'relative' }}>
               <button onClick={() => setMenuOpen(o => !o)} style={{
